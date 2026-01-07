@@ -7,9 +7,7 @@ public class PlayerStats
     {
         get
         {
-            //
-                // Modify what I can return in any way I want
-            //
+            
 
             return moveSpeed;
         }
