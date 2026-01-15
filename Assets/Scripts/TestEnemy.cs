@@ -7,17 +7,18 @@ public class TestEnemy : MonoBehaviour
     [SerializeField] private int damageToDeal = 15;
     public void OnAttack(InputValue value)
     {
-        if(value.isPressed)
+        if (value.isPressed)
         {
             if (playerController != null)
             {
 
                 playerController.TakeDamage(damageToDeal);
             }
-        }
-        else
-        {
-            Debug.LogWarning("TESTENEMY.CS: PlayerController is null");
+
+            else
+            {
+                Debug.LogWarning("TESTENEMY.CS: PlayerController is null");
+            }
         }
     }
 }

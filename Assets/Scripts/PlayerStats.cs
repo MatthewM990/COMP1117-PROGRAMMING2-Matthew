@@ -12,13 +12,17 @@ public class PlayerStats
     {
         get
         {
-            return moveSpeed; 
+            return moveSpeed;
         }
         set
         {
-            if(value > 20)
+            if (value > 20)
             {
                 moveSpeed = 20;
+            }
+            else if (value < 0)
+            {
+                moveSpeed = 0;
             }
             else
             {
@@ -40,7 +44,6 @@ public class PlayerStats
         {
             currentHealth = Mathf.Clamp(value, 0, 100);
             Debug.Log($"Health set to: {currentHealth}");
-            //currentHealth = value; 
         }
     }
 
