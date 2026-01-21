@@ -1,50 +1,76 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerController : MonoBehaviour
+[RequireComponent(typeof(PlayerInputHandler), typeof(Rigidbody2D))]
+public class PlayerController : Character
 {
-    [Header("Initial Player Stats")]
-    // Initial Player Stats
-    [SerializeField] private float initialSpeed = 5;
-    [SerializeField] private int initialHealth = 100;
+    // Jumping logic
+    [Header("Movement Settings")]
+    [SerializeField] private float jumpForce = 12f;                 // force of my jump
+    [SerializeField] private LayerMask groundLayer;                 // Checking to see if I am standing on the ground layer
+    [SerializeField] private Transform groundCheck;                 // Position of my ground check
+    [SerializeField] private float groundCheckRadius = 0.2f;        // size of my ground check
 
-    // Private variables
-    private PlayerStats stats;
-    private Vector2 moveInput;
+    // Private variables                            // Used to apply a force to move or jump
+    private Rigidbody2D rBody;                      // Reads the input
+    private PlayerInputHandler input;               // Holds the result of the ground check operation
+    private bool isGrounded;
 
-    // Components
-    private Rigidbody2D rBody;
-
-    void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         // Initialize
         rBody = GetComponent<Rigidbody2D>();
-
-        stats = new PlayerStats(initialSpeed, initialHealth);
+        input = GetComponent<PlayerInputHandler>();
     }
 
-    void OnMove(InputValue value)
+    private void Update()
     {
-        moveInput = value.Get<Vector2>();
+        // perform my ground check
+        isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
+        Debug.Log(isGrounded);
     }
-
     void FixedUpdate()
     {
-        ApplyMovement();
+        if(IsDead)
+        {
+            return;
+        }
+
+        // Handle movement
+
+        HandleMovement();
+        // Handle Jumping
+        HandleJump();
+        // Optional: Handle mario-like falling
     }
 
-    private void ApplyMovement()
+    private void HandleMovement()
     {
-        float velocityX = moveInput.x * stats.MoveSpeed;
+        // We get MoveInput from InputHandler
+        // We get MoveSpeed from our Parent class (Character)
+        float horizontalVelocity = input.MoveInput.x * MoveSpeed;
 
-        rBody.linearVelocity = new Vector2(velocityX, rBody.linearVelocity.y);
+        rBody.linearVelocity = new Vector2(horizontalVelocity, rBody.linearVelocity.y);
     }
 
-    public void TakeDamage(int damageAmount)
+    private void HandleJump()
     {
-        stats.CurrentHealth -= damageAmount;
-        // stats.CurrentHealth = stats.CurrentHealth - damageAmount;
+        // Only jump if the input handles jump property is true
+        if(input.JumpTriggered && isGrounded)
+        {
+            // Apply Jump Force
+            ApplyJumpForce();
 
-        Debug.Log("Player took damage");
+            // *Consume the jump"
+        }
+    }
+
+    private void ApplyJumpForce()
+    {
+        // reset vertical velocity first to ensure consisten jump height
+        rBody.linearVelocity = new Vector2(rBody.linearVelocity.x, 0);
+
+        rBody.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
     }
 }
