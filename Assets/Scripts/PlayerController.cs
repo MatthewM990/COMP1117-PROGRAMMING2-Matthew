@@ -64,6 +64,11 @@ public class PlayerController : Character
 
             // *Consume the jump"
         }
+        else if (!input.JumpTriggered && rBody.linearVelocity.y > 0f)
+        {
+            // Short hop: reduce upward velocity
+            rBody.linearVelocity = new Vector2(rBody.linearVelocity.x, rBody.linearVelocity.y * 0.5f);
+        }
     }
 
     private void ApplyJumpForce()
