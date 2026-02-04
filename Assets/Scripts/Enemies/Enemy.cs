@@ -8,6 +8,13 @@ public class Enemy : Character
     private Vector2 startPos; // Starting Position
     private int direction = -1; // Direction my enemy is facing
 
+    protected SpriteRenderer spriteRenderer;
+
+    protected virtual void Start()
+    {
+        spriteRenderer = GetComponent<SpriteRenderer>();
+    }
+
     protected override void Awake()
     {
         base.Awake();
@@ -17,7 +24,7 @@ public class Enemy : Character
         startPos = transform.position;
     }
 
-    private void Update()
+    protected virtual void Update()
     {
         // Calculate the boundaries of my movement
         float leftBoundary = startPos.x - patrolDistance;
@@ -30,12 +37,14 @@ public class Enemy : Character
         if (transform.position.x >= rightBoundary)
         {
             direction = -1;     // Face to the left
-            transform.localScale = new Vector3(1, 1, 1);
+            spriteRenderer.flipX = false;  // flip left
+
         }
         else if (transform.position.x <= leftBoundary)
         {
             direction = 1;      // Face to the right
-            transform.localScale = new Vector3(-1, 1, 1);
+            spriteRenderer.flipX = true; // flip right
+
         }
     }
 }
