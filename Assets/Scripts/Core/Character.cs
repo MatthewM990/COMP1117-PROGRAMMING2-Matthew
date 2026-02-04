@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [RequireComponent (typeof(Animator))]
-public class Character : MonoBehaviour
+public abstract class Character : MonoBehaviour
 {
     // Private Variables
     [Header("Character Stats")]
@@ -10,7 +10,7 @@ public class Character : MonoBehaviour
     [SerializeField] private int currentHealth;
 
 
-    private bool isDead = false;
+    protected bool isDead = false;
     protected Animator anim;
 
     // Public properties
@@ -55,9 +55,6 @@ public class Character : MonoBehaviour
         }
     }
 
-    protected void Die()
-    {
-        isDead = true;
-        Debug.Log($"{gameObject.name} has died.");
-    }
+    // each child object will implement their own death
+    public abstract void Die();
 }

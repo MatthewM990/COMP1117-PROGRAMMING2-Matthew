@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using UnityEngine;
 
 public class Enemy : Character
@@ -47,4 +48,11 @@ public class Enemy : Character
 
         }
     }
-}
+
+        public override void Die()
+        {
+            Debug.Log("Enemy is dead");
+            
+        }
+ }
+
