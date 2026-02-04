@@ -36,7 +36,7 @@ public class Player : Character
         anim.SetFloat("yVelocity", rBody.linearVelocity.y);
 
         // Handle Sprite Flipping
-        if(input.MoveInput.x != 0 && isDead)
+        if(input.MoveInput.x != 0)
         {
             transform.localScale = new Vector3(Mathf.Sign(input.MoveInput.x), 1, 1);
         }
